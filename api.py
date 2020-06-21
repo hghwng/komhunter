@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import requests
 import json
+from pprint import pprint
 
 
 class StravaAPI:
@@ -39,12 +40,25 @@ class StravaAPI:
             min_cat=category[0],
             max_cat=category[1])
 
+# Example:
+#   Segment: 229781
+#   Bounding box: (40, 116), (41, 117)
 
 def main():
     api = StravaAPI()
-    # print(api.get_segment_detail(229781))
-    # print(api.get_segment_leaderboard(229781))
-    print(api.get_segment_explore(bounds=((40, 116), (41, 117))))
+    from sys import argv
+
+    if argv[1] == 'get_segment_detail':
+        r = api.get_segment_detail(argv[2])
+    elif argv[1] == 'get_segment_leaderboard':
+        r = api.get_segment_detail(argv[2])
+    elif argv[1] == 'get_segment_explore':
+        r = api.get_segment_explore(bounds=((argv[2], argv[3]), (argv[4], argv[5])))
+    else:
+        print("unknown api!")
+        return
+
+    pprint(r)
 
 
 if __name__ == '__main__':
