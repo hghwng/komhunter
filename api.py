@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-import requests
 import json
+from sys import argv
 from pprint import pprint
+import requests
 
 
 class StravaAPI:
@@ -21,11 +22,11 @@ class StravaAPI:
         except json.decoder.JSONDecodeError as e:
             print("ERROR: ", e)
 
-    def get_segment_detail(self, id):
-        return self.get(f'segments/{id}')
+    def get_segment_detail(self, sid):
+        return self.get(f'segments/{sid}')
 
-    def get_segment_leaderboard(self, id):
-        return self.get(f'segments/{id}/leaderboard')
+    def get_segment_leaderboard(self, sid):
+        return self.get(f'segments/{sid}/leaderboard')
 
     # bounds: ((min_lat, min_lng), (max_lat, max_lng))
     # activity_type: 'cycling' or 'running'
@@ -34,27 +35,28 @@ class StravaAPI:
                             bounds,
                             activity_type='cycling',
                             category=(0, 5)):
+        b = bounds
         return self.get(
-            f'segments/explore',
-            bounds=f'{bounds[0][0]}, {bounds[0][1]}, {bounds[1][0]}, {bounds[1][1]}',
+            'segments/explore',
+            bounds=f'{b[0][0]}, {b[0][1]}, {b[1][0]}, {b[1][1]}',
             activity_type=activity_type,
             min_cat=category[0],
             max_cat=category[1])
 
+
 # Example:
 #   Segment: 229781
 #   Bounding box: (40, 116), (41, 117)
-
 def main():
     api = StravaAPI()
-    from sys import argv
 
     if argv[1] == 'get_segment_detail':
         r = api.get_segment_detail(argv[2])
     elif argv[1] == 'get_segment_leaderboard':
         r = api.get_segment_detail(argv[2])
     elif argv[1] == 'get_segment_explore':
-        r = api.get_segment_explore(bounds=((argv[2], argv[3]), (argv[4], argv[5])))
+        r = api.get_segment_explore(
+            bounds=((argv[2], argv[3]), (argv[4], argv[5])))
     else:
         print("unknown api!")
         return
