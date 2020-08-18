@@ -28,14 +28,15 @@ class StravaAPI:
         return self.get(f'segments/{id}/leaderboard')
 
     # bounds: ((min_lat, min_lng), (max_lat, max_lng))
-    # catagory: (min, max) where min, max in ['NC', '4', '3', '2', '1', 'HC']
+    # activity_type: 'cycling' or 'running'
+    # category: (min, max) where min, max in [0, 1, 2, 3, 4, 5]
     def get_segment_explore(self,
                             bounds,
-                            activity_type='riding',
-                            category=('NC', 'HC')):
+                            activity_type='cycling',
+                            category=(0, 5)):
         return self.get(
             f'segments/explore',
-            bounds=f'[{bounds[0][0]}, {bounds[0][1]}, {bounds[1][0]}, {bounds[1][1]}]',
+            bounds=f'{bounds[0][0]}, {bounds[0][1]}, {bounds[1][0]}, {bounds[1][1]}',
             activity_type=activity_type,
             min_cat=category[0],
             max_cat=category[1])
